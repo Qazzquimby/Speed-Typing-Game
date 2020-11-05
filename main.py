@@ -1,60 +1,79 @@
 import pygame
-import pygame_textinput
 
 import UI
 import word_generator
+import pygame_textinput
 
 
-def main():
-    screen = UI.Screen()
-    screen.setup()
+class Game:
 
-    text_input = pygame_textinput.TextInput()
-    text_input.set_text_color(screen.color_white)
-    text_input.set_cursor_color(screen.color_white)
+    def __init__(self):
+        self.screen = UI.Screen()
+        self.text_input = pygame_textinput.TextInput()
+        self.active_words = []
+        self.running_frame = 0
 
-    active_words = [word_generator.Word(screen)]
+    def setup_game(self):
+        self.screen.setup()
+        self.text_input.set_text_color(self.screen.color_white)
+        self.text_input.set_cursor_color(self.screen.color_white)
 
-    running = True
-    running_frame = 0
-    while running:
-        screen.screen.fill(screen.color_black)
+    def run_game(self):
+        running = True
+        while running:
+            self.add_word_to_active_words()
 
-        if running_frame == 60:
-            active_words.append(word_generator.Word(screen))
-            running_frame = 0
-        else:
-            running_frame = running_frame + 1
+            self.draw_screen()
 
-        for i in active_words:
-            screen.screen.blit(i.get_text(), i.get_text_rect())
-        screen.screen.blit(text_input.get_surface(), (1100, 680))
+            events = pygame.event.get()
+            self.handle_events(events)
 
-        events = pygame.event.get()
+            self.check_if_loss()
+
+            self.screen.clock.tick(30)
+            pygame.display.update()
+
+    def add_word_to_active_words(self):
+        if self.running_frame % 60 == 0:
+            self.active_words.append(word_generator.Word(self.screen))
+        self.running_frame += 1
+
+    def draw_screen(self):
+        self.screen.screen.fill(self.screen.color_black)
+
+        for active_word in self.active_words:
+            self.screen.screen.blit(active_word.get_text(), active_word.get_text_rect())
+            active_word.textRect = active_word.textRect.move(self.screen.speed)
+        self.screen.screen.blit(self.text_input.get_surface(), (1100, 680))
+
+    def handle_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        if text_input.update(events):
-            for i in active_words:
-                if i.get_name() == text_input.get_text():
-                    active_words.remove(i)
-                    del i
+        if self.text_input.update(events):
+            for active_word in self.active_words:
+                if active_word.get_name() == self.text_input.get_text():
+                    self.active_words.remove(active_word)
+                    del active_word
                     break
-            text_input.clear_text()
+            self.text_input.clear_text()
 
-        for i in active_words:
-            i.textRect = i.textRect.move(screen.speed)
-            if i.textRect[0] >= 1280:
+    def check_if_loss(self):
+        for active_word in self.active_words:
+            if active_word.textRect[0] >= 1280:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
 
-        screen.clock.tick(30)
-        pygame.display.update()
+
+def main():
+    pygame.init()
+    game = Game()
+    game.setup_game()
+    game.run_game()
 
 
-pygame.init()
-main()
-
+if __name__ == '__main__':
+    main()
