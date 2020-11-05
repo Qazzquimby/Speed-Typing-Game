@@ -44,7 +44,7 @@ class Game:
         for active_word in self.active_words:
             self.screen.screen.blit(active_word.get_text(), active_word.get_text_rect())
             active_word.textRect = active_word.textRect.move(self.screen.speed)
-        self.screen.screen.blit(self.text_input.get_surface(), (self.screen.X_size - 50, self.screen.Y_size - 50))
+        self.screen.screen.blit(self.text_input.get_surface(), (self.screen.X_size - 200, self.screen.Y_size - 50))
 
     def handle_events(self, events):
         for event in events:
