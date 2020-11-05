@@ -44,7 +44,7 @@ class Game:
         for active_word in self.active_words:
             self.screen.screen.blit(active_word.get_text(), active_word.get_text_rect())
             active_word.textRect = active_word.textRect.move(self.screen.speed)
-        self.screen.screen.blit(self.text_input.get_surface(), (1100, 680))
+        self.screen.screen.blit(self.text_input.get_surface(), (self.screen.X_size - 50, self.screen.Y_size - 50))
 
     def handle_events(self, events):
         for event in events:
@@ -62,7 +62,7 @@ class Game:
 
     def check_if_loss(self):
         for active_word in self.active_words:
-            if active_word.textRect[0] >= 1280:
+            if active_word.textRect[0] >= self.screen.X_size:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
