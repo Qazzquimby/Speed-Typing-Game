@@ -62,9 +62,9 @@ class GameLogic:
                                             in zip(active_word.coordinates, self.word_speed))
 
     def add_word_to_active_words(self):
-        if self.running_frame % 60 == 0:
-            self.active_words.append(word_generator.Word())
-        self.running_frame += 1
+        if self.state.running_frame % 60 == 0:
+            self.state.active_words.append(word_generator.spawn_random_word(self.screen_y_size))
+        self.state.running_frame += 1
 
     def check_if_loss(self):
         for active_word in self.state.active_words:
