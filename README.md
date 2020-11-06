@@ -1,42 +1,30 @@
 # Speed-Typing-Game
 
-As for now the application is in it's barebones. Only code pressent is to make the base logic of the game to work
+As for now the application is in it's barebones. 
+Only code present is to make the base logic of the game to work
 
-Questions:
-  I am unsure as to what way of organizing the classes should I use.
-    If a function (like the function "run_game") calls different functions (like it calling "draw_screen" and "event_handler"
-      How do I organize those functions in the code?
-      Do I add them by order of apperance? and if so, if those functions call other functions themselves (no occurrence of this at the moment of writing the code)
-      How do I organize them? Would it be something like this?
-      
-        do_something()
-          functionA()
-          functionB()
-          
-        functionA()
-          print("FunctionA")
-          functionA1()
-          
-        functionA1()
-          print("FunctionA1")
-          
-        functionB()
-          print("FunctionB")
-          
-  I am unsure as what the common practices are for spacing on the code. specially inside functions
-    For personal clarity I was used to put spaces between different smaller "chunks" of code inside the function (mostly because my functions where doing "too much")
-    Now that I am trying to make everything cleaner and make smaller and smaller functions, I find myself with things like in main, Game.run_game() where you can find:
-    (This looks wrong to me, specially since there is now more functions and they are separated by 1 line between them (as because of PEP8))
+### Questions:
+- I am unsure as to if I am doing it right 
+(probably no, since I am passing too many arguments around)
+    - `self.game_logic = GameLogic(self.game_state.active_words, 
+    self.game_state.running_frame, self.game_state.screen)`
+    - problem is that the class GameLogic is using all of these 3, could send game_state as
+    argument? but that way all of the other data would be sent, when it doesnt need it 
+    (probably my game_state is not constructed properly?)
+- I have seen a couple of different ways of people doing this, but whats the convention
+for arguments and variables?
+    - `def __init__(self, active_words, text_input):`
     
-      def run_game()
-        self.add_word_to_active_words()
-
-        self.draw_screen()
-
-        events = pygame.event.get()
-        self.handle_events(events)
-        ...
+        `self.active_words = active_words`
         
-  I am unsure if I am doing it right. I am trying to become accostumed to work with github commits and all that jazz
-    I have tried to put explanations on each of the commits I have put up. Do they look correct or there is something I am doing wrong?
-    Also I have no idea what "Merge branch 'main' of... in the commits is.
+        `self.text_input = text_input`
+    - is how would you differentiate between the active_words argument and the self.active_words
+- How to organize all the different classes created? When splitting the previous "Game" class.
+Many classes were created (5 in this case).
+    - Would all of these have files for them individually?
+    - Should I create a folder and have all these classes inside the folder? (since they are
+    "under" main)
+- When doing the git status, I see two "modified" that I have no idea why they are there
+    - `__pycache__/UI.cpython-37.pyc
+    - `__pycache__/pygame_textinput.cpython-37.pyc
+

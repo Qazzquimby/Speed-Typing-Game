@@ -9,7 +9,6 @@ class Screen:
         self.screen_size = (self.X_size, self.Y_size)
         self.color_white = (255, 255, 255)
         self.color_black = (0, 0, 0)
-        self.speed = (2, 0)
 
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode(self.screen_size)
