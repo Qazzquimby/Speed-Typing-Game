@@ -136,9 +136,10 @@ def main():
 
     logic = GameLogic(state, SCREEN_DIMENSIONS)
     events = GameEventHandler(state)
-    game = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
 
-    game.run_game()
+    loop = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
+
+    loop.run_game()
 
 
 if __name__ == '__main__':
