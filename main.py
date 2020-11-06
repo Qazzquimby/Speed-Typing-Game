@@ -93,7 +93,6 @@ class GameEventHandler:
             for active_word in self.state.active_words:
                 if active_word.name == self.state.text_input.get_text():
                     self.state.active_words.remove(active_word)
-                    del active_word
                     break
             self.state.text_input.clear_text()
 
