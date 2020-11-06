@@ -26,7 +26,7 @@ class TextInput:
             text_color=(0, 0, 0),
             cursor_color=(0, 0, 1),
             repeat_keys_initial_ms=400,
-            repeat_keys_interval_ms=35,
+            repeat_keys_interval_ms=100000,             # Changed from 35, fix bug with double keys
             max_string_length=-1,
             password=False):
         """
