@@ -22,8 +22,8 @@ class GameGraphics:
 
         self.print_offset = Point(-200, -50)
 
-        self.state.text_input.set_text_color(self.screen.color_white)
-        self.state.text_input.set_cursor_color(self.screen.color_white)
+        self.state.text_input.text_color = self.screen.color_white
+        self.state.text_input.cursor_color = self.screen.color_white
 
     def update(self):
         self.screen.screen.fill(self.screen.color_black)
@@ -43,7 +43,7 @@ class GameGraphics:
     def print_texts(self):
         print_coordinates = tuple(self.screen.size + self.print_offset)
         self.screen.screen.blit(
-            self.state.text_input.get_surface(),
+            self.state.text_input.surface,
             print_coordinates)
 
 
@@ -90,7 +90,7 @@ class GameEventHandler:
 
         if self.state.text_input.update(events):
             for active_word in self.state.active_words:
-                if active_word.name == self.state.text_input.get_text():
+                if active_word.name == self.state.text_input.text:
                     self.state.active_words.remove(active_word)
                     break
             self.state.text_input.clear_text()

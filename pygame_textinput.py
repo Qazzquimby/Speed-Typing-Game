@@ -47,7 +47,7 @@ class TextInput:
         self.font_size = font_size
         self.max_string_length = max_string_length
         self.password = password
-        self.input_string = initial_string  # Inputted text
+        self.text = initial_string  # Inputted text
 
         if not os.path.isfile(font_family):
             font_family = pygame.font.match_font(font_family)
@@ -84,17 +84,17 @@ class TextInput:
                         self.keyrepeat_counters[event.key] = [0, event.unicode]
 
                 if event.key == pl.K_BACKSPACE:
-                    self.input_string = (
-                        self.input_string[:max(self.cursor_position - 1, 0)]
-                        + self.input_string[self.cursor_position:]
+                    self.text = (
+                            self.text[:max(self.cursor_position - 1, 0)]
+                        + self.text[self.cursor_position:]
                     )
 
                     # Subtract one from cursor_pos, but do not go below zero:
                     self.cursor_position = max(self.cursor_position - 1, 0)
                 elif event.key == pl.K_DELETE:
-                    self.input_string = (
-                        self.input_string[:self.cursor_position]
-                        + self.input_string[self.cursor_position + 1:]
+                    self.text = (
+                            self.text[:self.cursor_position]
+                        + self.text[self.cursor_position + 1:]
                     )
 
                 elif event.key == pl.K_RETURN:
@@ -102,24 +102,24 @@ class TextInput:
 
                 elif event.key == pl.K_RIGHT:
                     # Add one to cursor_pos, but do not exceed len(input_string)
-                    self.cursor_position = min(self.cursor_position + 1, len(self.input_string))
+                    self.cursor_position = min(self.cursor_position + 1, len(self.text))
 
                 elif event.key == pl.K_LEFT:
                     # Subtract one from cursor_pos, but do not go below zero:
                     self.cursor_position = max(self.cursor_position - 1, 0)
 
                 elif event.key == pl.K_END:
-                    self.cursor_position = len(self.input_string)
+                    self.cursor_position = len(self.text)
 
                 elif event.key == pl.K_HOME:
                     self.cursor_position = 0
 
-                elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
+                elif len(self.text) < self.max_string_length or self.max_string_length == -1:
                     # If no special key is pressed, add unicode of key to input_string
-                    self.input_string = (
-                        self.input_string[:self.cursor_position]
+                    self.text = (
+                            self.text[:self.cursor_position]
                         + event.unicode
-                        + self.input_string[self.cursor_position:]
+                        + self.text[self.cursor_position:]
                     )
                     self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
 
@@ -143,9 +143,9 @@ class TextInput:
                 pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
 
         # Re-render text surface:
-        string = self.input_string
+        string = self.text
         if self.password:
-            string = "*" * len(self.input_string)
+            string = "*" * len(self.text)
         self.surface = self.font_object.render(string, self.antialias, self.text_color)
 
         # Update self.cursor_visible
@@ -155,7 +155,7 @@ class TextInput:
             self.cursor_visible = not self.cursor_visible
 
         if self.cursor_visible:
-            cursor_y_pos = self.font_object.size(self.input_string[:self.cursor_position])[0]
+            cursor_y_pos = self.font_object.size(self.text[:self.cursor_position])[0]
             # Without this, the cursor is invisible when self.cursor_position > 0:
             if self.cursor_position > 0:
                 cursor_y_pos -= self.cursor_surface.get_width()
@@ -164,23 +164,8 @@ class TextInput:
         self.clock.tick()
         return False
 
-    def get_surface(self):
-        return self.surface
-
-    def get_text(self):
-        return self.input_string
-
-    def get_cursor_position(self):
-        return self.cursor_position
-
-    def set_text_color(self, color):
-        self.text_color = color
-
-    def set_cursor_color(self, color):
-        self.cursor_surface.fill(color)
-
     def clear_text(self):
-        self.input_string = ""
+        self.text = ""
         self.cursor_position = 0
 
 
@@ -204,7 +189,7 @@ if __name__ == "__main__":
         # Feed it with events every frame
         textinput.update(events)
         # Blit its surface onto the screen
-        screen.blit(textinput.get_surface(), (10, 10))
+        screen.blit(textinput.surface, (10, 10))
 
         pygame.display.update()
         clock.tick(30)
