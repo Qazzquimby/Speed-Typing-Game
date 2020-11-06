@@ -39,15 +39,16 @@ class GameGraphics:
     # Is just a one liner, but when there is more text to print (like the words per minute etc)
     # this function will take coordinates and the text to print, so this can be used for all texts
     def print_texts(self):
-        self.screen.screen.blit(self.text_input.get_surface(), (self.screen.X_size - 200, self.screen.Y_size - 50))
+        self.screen.screen.blit(
+            self.text_input.get_surface(),
+            (self.screen.size.x - 200, self.screen.size.y - 50))
 
 
 class GameLogic:
 
-    def __init__(self, state, screen_x_size, screen_y_size):
+    def __init__(self, state, size):
         self.state = state
-        self.screen_x_size = screen_x_size
-        self.screen_y_size = screen_y_size
+        self.size = size
 
         self.word_speed = (2, 0)
 
@@ -63,12 +64,12 @@ class GameLogic:
 
     def add_word_to_active_words(self):
         if self.state.running_frame % 60 == 0:
-            self.state.active_words.append(word_generator.spawn_random_word(self.screen_y_size))
+            self.state.active_words.append(word_generator.spawn_random_word(self.size.y))
         self.state.running_frame += 1
 
     def check_if_loss(self):
         for active_word in self.state.active_words:
-            if active_word.coordinates[0] >= self.screen_x_size:
+            if active_word.coordinates[0] >= self.size.x:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
@@ -116,19 +117,24 @@ class GameLoop:
             pygame.display.update()
 
 
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
 def main():
     # config options. Can be moved elsewhere, or even read from a file.
-    X_SIZE = 1280
-    Y_SIZE = 720
+    SCREEN_DIMENSIONS = Point(x=1280, y=720)
 
     pygame.init()
 
     state = GameState()
 
-    screen = UI.Screen(X_SIZE, Y_SIZE)
+    screen = UI.Screen(SCREEN_DIMENSIONS)
     graphics = GameGraphics(state, screen)
 
-    logic = GameLogic(state, X_SIZE, Y_SIZE)
+    logic = GameLogic(state, SCREEN_DIMENSIONS)
     events = GameEventHandler(state)
     game = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
 
