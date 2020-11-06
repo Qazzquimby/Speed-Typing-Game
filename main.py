@@ -55,6 +55,7 @@ class GameLogic:
         self.move_active_words()
         self.add_word_to_active_words()
         self.check_if_loss()
+        self.state.running_frame += 1
 
     def move_active_words(self):
         for active_word in self.state.active_words:
@@ -64,7 +65,6 @@ class GameLogic:
     def add_word_to_active_words(self):
         if self.state.running_frame % 60 == 0:
             self.state.active_words.append(word_generator.spawn_random_word(self.size.y))
-        self.state.running_frame += 1
 
     def check_if_loss(self):
         for active_word in self.state.active_words:
