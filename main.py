@@ -7,8 +7,8 @@ import pygame_textinput
 
 class GameState:
 
-    def __init__(self):
-        self.screen = UI.Screen()
+    def __init__(self, screen):
+        self.screen = screen
         self.screen.setup()
         self.text_input = pygame_textinput.TextInput()
         self.text_input.set_text_color(self.screen.color_white)
@@ -45,11 +45,11 @@ class GameGraphics:
 
 class GameLogic:
 
-    def __init__(self, active_words, running_frame, screen):
+    def __init__(self, active_words, running_frame, screen_x_size):
         self.active_words = active_words
         self.running_frame = running_frame
-        self.screen = screen
         self.word_speed = (2, 0)
+        self.screen_x_size = screen_x_size
 
     def update(self):
         self.move_active_words()
@@ -68,7 +68,7 @@ class GameLogic:
 
     def check_if_loss(self):
         for active_word in self.active_words:
-            if active_word.coordinates[0] >= self.screen.X_size:
+            if active_word.coordinates[0] >= self.screen_x_size:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
@@ -97,11 +97,11 @@ class GameEventHandler:
 
 class GameLoop:
 
-    def __init__(self):
-        self.game_state = GameState()
-        self.game_graphics = GameGraphics(self.game_state)
-        self.game_logic = GameLogic(self.game_state.active_words, self.game_state.running_frame, self.game_state.screen)
-        self.game_events_handler = GameEventHandler(self.game_state.active_words, self.game_state.text_input)
+    def __init__(self, state, graphics, logic, events):
+        self.game_state = state
+        self.game_graphics = graphics
+        self.game_logic = logic
+        self.game_events_handler = events
 
     def run_game(self):
         running = True
@@ -118,8 +118,20 @@ class GameLoop:
 
 
 def main():
+    # config options. Can be moved elsewhere, or even read from a file.
+    X_SIZE = 1280
+    Y_SIZE = 720
+
     pygame.init()
-    game = GameLoop()
+
+    screen = UI.Screen(X_SIZE, Y_SIZE)
+    state = GameState(screen)
+
+    graphics = GameGraphics(state)
+    logic = GameLogic(state.active_words, state.running_frame, X_SIZE)
+    events = GameEventHandler(state.active_words, state.text_input)
+    game = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
+
     game.run_game()
 
 

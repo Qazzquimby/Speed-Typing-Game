@@ -1,11 +1,10 @@
 import pygame
 
-
 class Screen:
 
-    def __init__(self):
-        self.X_size = 1280
-        self.Y_size = 720
+    def __init__(self, x_size, y_size):
+        self.X_size = x_size
+        self.Y_size = y_size
         self.screen_size = (self.X_size, self.Y_size)
         self.color_white = (255, 255, 255)
         self.color_black = (0, 0, 0)
