@@ -44,11 +44,12 @@ class GameGraphics:
 
 class GameLogic:
 
-    def __init__(self, active_words, running_frame, screen_x_size):
-        self.active_words = active_words
-        self.running_frame = running_frame
-        self.word_speed = (2, 0)
+    def __init__(self, state, screen_x_size, screen_y_size):
+        self.state = state
         self.screen_x_size = screen_x_size
+        self.screen_y_size = screen_y_size
+
+        self.word_speed = (2, 0)
 
     def update(self):
         self.move_active_words()
@@ -56,7 +57,7 @@ class GameLogic:
         self.check_if_loss()
 
     def move_active_words(self):
-        for active_word in self.active_words:
+        for active_word in self.state.active_words:
             active_word.coordinates = tuple(orig + move for orig, move
                                             in zip(active_word.coordinates, self.word_speed))
 
@@ -66,7 +67,7 @@ class GameLogic:
         self.running_frame += 1
 
     def check_if_loss(self):
-        for active_word in self.active_words:
+        for active_word in self.state.active_words:
             if active_word.coordinates[0] >= self.screen_x_size:
                 print("Sorry you lost")
                 pygame.quit()
@@ -75,9 +76,8 @@ class GameLogic:
 
 class GameEventHandler:
 
-    def __init__(self, active_words, text_input):
-        self.active_words = active_words
-        self.text_input = text_input
+    def __init__(self, state):
+        self.state = state
 
     def update(self, events):
         for event in events:
@@ -85,13 +85,13 @@ class GameEventHandler:
                 pygame.quit()
                 quit()
 
-        if self.text_input.update(events):
-            for active_word in self.active_words:
-                if active_word.name == self.text_input.get_text():
-                    self.active_words.remove(active_word)
+        if self.state.text_input.update(events):
+            for active_word in self.state.active_words:
+                if active_word.name == self.state.text_input.get_text():
+                    self.state.active_words.remove(active_word)
                     del active_word
                     break
-            self.text_input.clear_text()
+            self.state.text_input.clear_text()
 
 
 class GameLoop:
@@ -123,12 +123,13 @@ def main():
 
     pygame.init()
 
-    screen = UI.Screen(X_SIZE, Y_SIZE)
     state = GameState()
 
+    screen = UI.Screen(X_SIZE, Y_SIZE)
     graphics = GameGraphics(state, screen)
-    logic = GameLogic(state.active_words, state.running_frame, X_SIZE)
-    events = GameEventHandler(state.active_words, state.text_input)
+
+    logic = GameLogic(state, X_SIZE, Y_SIZE)
+    events = GameEventHandler(state)
     game = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
 
     game.run_game()
