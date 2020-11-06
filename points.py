@@ -8,3 +8,7 @@ class Point:
             x=self.x + other.x,
             y=self.y + other.y
         )
+
+    def __iter__(self):
+        yield self.x
+        yield self.y

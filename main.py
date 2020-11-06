@@ -33,7 +33,7 @@ class GameGraphics:
         for active_word in self.state.active_words:
             active_word.text = self.screen.font.render(active_word.name, True, self.screen.color_white, None)
             active_word.textRect = active_word.text.get_rect()
-            active_word.textRect.center = (active_word.coordinates.x, active_word.coordinates.y)
+            active_word.textRect.center = tuple(active_word.coordinates)
 
             self.screen.screen.blit(active_word.text, active_word.textRect)
 

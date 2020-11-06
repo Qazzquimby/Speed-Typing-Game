@@ -8,7 +8,7 @@ class Screen:
         self.color_black = (0, 0, 0)
 
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((self.size.x, self.size.y))
+        self.screen = pygame.display.set_mode(tuple(self.size))
         self.font = pygame.font.Font(None, 32)
 
     def setup(self):
