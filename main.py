@@ -21,6 +21,8 @@ class GameGraphics:
         self.screen = screen
         self.screen.setup()
 
+        self.print_offset = Point(-200, -50)
+
         self.state.text_input.set_text_color(self.screen.color_white)
         self.state.text_input.set_cursor_color(self.screen.color_white)
 
@@ -40,9 +42,10 @@ class GameGraphics:
     # Is just a one liner, but when there is more text to print (like the words per minute etc)
     # this function will take coordinates and the text to print, so this can be used for all texts
     def print_texts(self):
+        print_coordinates = tuple(self.screen.size + self.print_offset)
         self.screen.screen.blit(
             self.state.text_input.get_surface(),
-            (self.screen.size.x - 200, self.screen.size.y - 50))
+            print_coordinates)
 
 
 class GameLogic:
