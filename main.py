@@ -4,6 +4,8 @@ import UI
 import word_generator
 import pygame_textinput
 
+from points import Point
+
 
 class GameState:
 
@@ -31,7 +33,7 @@ class GameGraphics:
         for active_word in self.state.active_words:
             active_word.text = self.screen.font.render(active_word.name, True, self.screen.color_white, None)
             active_word.textRect = active_word.text.get_rect()
-            active_word.textRect.center = active_word.coordinates
+            active_word.textRect.center = (active_word.coordinates.x, active_word.coordinates.y)
 
             self.screen.screen.blit(active_word.text, active_word.textRect)
 
@@ -49,7 +51,7 @@ class GameLogic:
         self.state = state
         self.size = size
 
-        self.word_speed = (2, 0)
+        self.word_speed = Point(2, 0)
 
     def update(self):
         self.move_active_words()
@@ -59,8 +61,7 @@ class GameLogic:
 
     def move_active_words(self):
         for active_word in self.state.active_words:
-            active_word.coordinates = tuple(orig + move for orig, move
-                                            in zip(active_word.coordinates, self.word_speed))
+            active_word.coordinates += self.word_speed
 
     def add_word_to_active_words(self):
         if self.state.running_frame % 60 == 0:
@@ -68,7 +69,7 @@ class GameLogic:
 
     def check_if_loss(self):
         for active_word in self.state.active_words:
-            if active_word.coordinates[0] >= self.size.x:
+            if active_word.coordinates.x >= self.size.x:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
@@ -114,12 +115,6 @@ class GameLoop:
 
             self.game_graphics.screen.clock.tick(30)
             pygame.display.update()
-
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
 
 
 def main():

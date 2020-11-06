@@ -1,4 +1,5 @@
 import random
+from points import Point
 
 POSSIBLE_WORDS = ["chorus", "forecast", "exact", "virgin", "pest", "shot", "fly", "shame", "gift",
                   "retain", "perfume", "atmosphere", "censorship", "looting", "banana", "face", "likely",
@@ -13,7 +14,7 @@ def _generate_random_coordinates(screen_y_size):
     padding = 50
     min_spawn_y = 0 + padding
     max_spawn_y = screen_y_size - padding
-    return 0, random.randint(min_spawn_y, max_spawn_y)
+    return Point(x=0, y=random.randint(min_spawn_y, max_spawn_y))
 
 
 def spawn_random_word(screen_y_size):
