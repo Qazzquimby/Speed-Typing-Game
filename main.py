@@ -7,22 +7,21 @@ import pygame_textinput
 
 class GameState:
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.screen.setup()
+    def __init__(self):
         self.text_input = pygame_textinput.TextInput()
-        self.text_input.set_text_color(self.screen.color_white)
-        self.text_input.set_cursor_color(self.screen.color_white)
         self.active_words = []
         self.running_frame = 0
 
 
-
 class GameGraphics:
-    def __init__(self, state):
-        self.screen = state.screen
+    def __init__(self, state, screen):
         self.text_input = state.text_input
         self.active_words = state.active_words
+
+        self.screen = screen
+        self.screen.setup()
+        self.text_input.set_text_color(self.screen.color_white)
+        self.text_input.set_cursor_color(self.screen.color_white)
 
     def update(self):
         self.screen.screen.fill(self.screen.color_black)
@@ -113,7 +112,7 @@ class GameLoop:
             events = pygame.event.get()
             self.game_events_handler.update(events)
 
-            self.game_state.screen.clock.tick(30)
+            self.game_graphics.screen.clock.tick(30)
             pygame.display.update()
 
 
@@ -125,9 +124,9 @@ def main():
     pygame.init()
 
     screen = UI.Screen(X_SIZE, Y_SIZE)
-    state = GameState(screen)
+    state = GameState()
 
-    graphics = GameGraphics(state)
+    graphics = GameGraphics(state, screen)
     logic = GameLogic(state.active_words, state.running_frame, X_SIZE)
     events = GameEventHandler(state.active_words, state.text_input)
     game = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
