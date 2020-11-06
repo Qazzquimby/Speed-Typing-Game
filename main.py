@@ -32,8 +32,14 @@ class GameGraphics:
 
     def move_words(self):
         for active_word in self.active_words:
+
+            active_word.text = self.screen.font.render(active_word.name, True, self.screen.color_white, None)
+            active_word.textRect = active_word.text.get_rect()
+            active_word.textRect.center = active_word.coordinates
+
             self.screen.screen.blit(active_word.text, active_word.textRect)
-            active_word.textRect = active_word.textRect.move(self.word_speed)
+            active_word.coordinates = tuple(orig + move for orig, move
+                                            in zip(active_word.coordinates, self.word_speed))
 
     # Is just a one liner, but when there is more text to print (like the words per minute etc)
     # this function will take coordinates and the text to print, so this can be used for all texts
@@ -54,12 +60,12 @@ class GameLogic:
 
     def add_word_to_active_words(self):
         if self.running_frame % 60 == 0:
-            self.active_words.append(word_generator.Word(self.screen))
+            self.active_words.append(word_generator.Word())
         self.running_frame += 1
 
     def check_if_loss(self):
         for active_word in self.active_words:
-            if active_word.textRect[0] >= self.screen.X_size:
+            if active_word.coordinates[0] >= self.screen.X_size:
                 print("Sorry you lost")
                 pygame.quit()
                 quit()
