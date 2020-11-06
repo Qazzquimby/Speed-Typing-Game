@@ -120,24 +120,21 @@ class GameLoop:
             pygame.display.update()
 
 
-def main():
-    # config options. Can be moved elsewhere, or even read from a file.
-    SCREEN_DIMENSIONS = Point(x=1280, y=720)
-
+def main(screen_dimensions):
     pygame.init()
 
     state = GameState()
 
-    screen = UI.Screen(SCREEN_DIMENSIONS)
+    screen = UI.Screen(screen_dimensions)
     graphics = GameGraphics(state, screen)
 
-    logic = GameLogic(state, SCREEN_DIMENSIONS)
+    logic = GameLogic(state, screen_dimensions)
     events = GameEventHandler(state)
 
     loop = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
-
     loop.run_game()
 
 
 if __name__ == '__main__':
-    main()
+    SCREEN_DIMENSIONS = Point(x=1280, y=720)
+    main(SCREEN_DIMENSIONS)
