@@ -19,7 +19,6 @@ class GameGraphics:
     def __init__(self, state, screen):
         self.state = state
         self.screen = screen
-        self.screen.setup()
 
         self.print_offset = Point(-200, -50)
 
@@ -124,10 +123,10 @@ def main(screen_dimensions):
 
     state = GameState()
 
-    screen = UI.Screen(screen_dimensions)
-    graphics = GameGraphics(state, screen)
+    screen = UI.Screen(name="SpeedTypo", size=screen_dimensions)
+    graphics = GameGraphics(state=state, screen=screen)
 
-    logic = GameLogic(state, screen_dimensions)
+    logic = GameLogic(state=state, size=screen_dimensions)
     events = GameEventHandler(state)
 
     loop = GameLoop(state=state, graphics=graphics, logic=logic, events=events)
