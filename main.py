@@ -15,13 +15,12 @@ class GameState:
 
 class GameGraphics:
     def __init__(self, state, screen):
-        self.text_input = state.text_input
-        self.active_words = state.active_words
-
+        self.state = state
         self.screen = screen
         self.screen.setup()
-        self.text_input.set_text_color(self.screen.color_white)
-        self.text_input.set_cursor_color(self.screen.color_white)
+
+        self.state.text_input.set_text_color(self.screen.color_white)
+        self.state.text_input.set_cursor_color(self.screen.color_white)
 
     def update(self):
         self.screen.screen.fill(self.screen.color_black)
@@ -29,7 +28,7 @@ class GameGraphics:
         self.print_texts()
 
     def draw_words(self):
-        for active_word in self.active_words:
+        for active_word in self.state.active_words:
             active_word.text = self.screen.font.render(active_word.name, True, self.screen.color_white, None)
             active_word.textRect = active_word.text.get_rect()
             active_word.textRect.center = active_word.coordinates
@@ -40,7 +39,7 @@ class GameGraphics:
     # this function will take coordinates and the text to print, so this can be used for all texts
     def print_texts(self):
         self.screen.screen.blit(
-            self.text_input.get_surface(),
+            self.state.text_input.get_surface(),
             (self.screen.size.x - 200, self.screen.size.y - 50))
 
 
