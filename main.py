@@ -32,7 +32,7 @@ class GameGraphics:
 
     def move_words(self):
         for active_word in self.active_words:
-            self.screen.screen.blit(active_word.get_text(), active_word.get_text_rect())
+            self.screen.screen.blit(active_word.text, active_word.textRect)
             active_word.textRect = active_word.textRect.move(self.word_speed)
 
     # Is just a one liner, but when there is more text to print (like the words per minute etc)
@@ -79,7 +79,7 @@ class GameEventHandler:
 
         if self.text_input.update(events):
             for active_word in self.active_words:
-                if active_word.get_name() == self.text_input.get_text():
+                if active_word.name == self.text_input.get_text():
                     self.active_words.remove(active_word)
                     del active_word
                     break
