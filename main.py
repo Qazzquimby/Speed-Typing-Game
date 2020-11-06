@@ -15,7 +15,7 @@ class GameState:
         self.text_input.set_cursor_color(self.screen.color_white)
         self.active_words = []
         self.running_frame = 0
-        self.word_speed = (2, 0)
+
 
 
 class GameGraphics:
@@ -23,23 +23,19 @@ class GameGraphics:
         self.screen = state.screen
         self.text_input = state.text_input
         self.active_words = state.active_words
-        self.word_speed = state.word_speed
 
     def update(self):
         self.screen.screen.fill(self.screen.color_black)
-        self.move_words()
+        self.draw_words()
         self.print_texts()
 
-    def move_words(self):
+    def draw_words(self):
         for active_word in self.active_words:
-
             active_word.text = self.screen.font.render(active_word.name, True, self.screen.color_white, None)
             active_word.textRect = active_word.text.get_rect()
             active_word.textRect.center = active_word.coordinates
 
             self.screen.screen.blit(active_word.text, active_word.textRect)
-            active_word.coordinates = tuple(orig + move for orig, move
-                                            in zip(active_word.coordinates, self.word_speed))
 
     # Is just a one liner, but when there is more text to print (like the words per minute etc)
     # this function will take coordinates and the text to print, so this can be used for all texts
@@ -53,10 +49,17 @@ class GameLogic:
         self.active_words = active_words
         self.running_frame = running_frame
         self.screen = screen
+        self.word_speed = (2, 0)
 
     def update(self):
+        self.move_active_words()
         self.add_word_to_active_words()
         self.check_if_loss()
+
+    def move_active_words(self):
+        for active_word in self.active_words:
+            active_word.coordinates = tuple(orig + move for orig, move
+                                            in zip(active_word.coordinates, self.word_speed))
 
     def add_word_to_active_words(self):
         if self.running_frame % 60 == 0:
